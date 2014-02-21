@@ -1,0 +1,10 @@
+---
+# setup the cluster itself
+- hosts: core-cluster
+  gather_facts: false
+  vars_files:
+    - vars/defaults.yml
+
+  roles:
+    - common
+    - core-cluster

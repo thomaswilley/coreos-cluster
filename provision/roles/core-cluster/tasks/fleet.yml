@@ -1,0 +1,28 @@
+---
+  - name: generate fleet.conf
+    local_action: template src=fleet.conf.j2 dest=/tmp/{{ inventory_hostname }}.fleet.conf
+
+  - name: (scp) copy generated fleet.conf to node (/home/core)
+    local_action: shell scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.vagrant.d/insecure_private_key /tmp/{{ inventory_hostname }}.fleet.conf core@{{ hostvars[inventory_hostname].ansible_ssh_host }}:/home/core
+
+  - name: (raw) rename back to simply fleet.conf
+    raw: mv /home/core/{{ inventory_hostname }}.fleet.conf /home/core/fleet.conf
+    sudo: no
+
+  - name: generate patched fleet-cluster.service
+    local_action: template src=fleet_cluster.service.j2 dest=/tmp/{{ inventory_hostname }}.fleet_cluster.service
+
+  - name: (scp) copy generated fleet-cluster.service to node (/home/core)
+    local_action: shell scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.vagrant.d/insecure_private_key /tmp/{{ inventory_hostname }}.fleet_cluster.service core@{{ hostvars[inventory_hostname].ansible_ssh_host }}:/home/core
+
+  - name: (raw) move fleet-cluster.service into position and properly name it
+    raw: mv /home/core/{{ inventory_hostname }}.fleet_cluster.service /media/state/units/fleet-cluster.service
+    sudo: yes
+
+  - name: link fleet-cluster.service to systemd
+    raw: systemctl link --runtime /media/state/units/fleet-cluster.service
+    sudo: yes
+
+  - name: start fleet-cluster.service
+    raw: systemctl start fleet-cluster.service
+    sudo: yes

@@ -1,0 +1,4 @@
+[core-cluster]
+core-01 ansible_ssh_host=192.168.65.2 node="firstslave" ansible_ssh_user=core ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key
+core-02 ansible_ssh_host=192.168.65.3 node="slave" ansible_ssh_user=core ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key
+core-03 ansible_ssh_host=192.168.65.4 node="slave" ansible_ssh_user=core ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key

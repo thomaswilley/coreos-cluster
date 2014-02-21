@@ -1,0 +1,10 @@
+[Unit]
+Description=Clustered fleet service
+After=etcd-cluster.service
+Requires=etcd-cluster.service
+
+[Service]
+ExecStart=/usr/bin/fleet --config /home/core/fleet.conf
+
+[Install]
+WantedBy=local.target

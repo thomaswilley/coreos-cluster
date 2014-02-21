@@ -1,0 +1,14 @@
+[Unit]
+Description=Clustered etcd
+#After=docker.service
+
+[Service]
+Restart=always
+{% if node == "firstslave" %}
+ExecStart=/usr/bin/etcd -name "{{ inventory_hostname }}" -addr {{ hostvars[inventory_hostname].ansible_ssh_host }}:4001 -peer-addr {{ hostvars[inventory_hostname].ansible_ssh_host }}:7001 -data-dir /home/core/etcd
+{% else %}
+ExecStart=/usr/bin/etcd -name "{{ inventory_hostname }}" -addr {{ hostvars[inventory_hostname].ansible_ssh_host }}:4001 -peer-addr {{ hostvars[inventory_hostname].ansible_ssh_host }}:7001 -peers {{ one_peer_addr }} -data-dir /home/core/etcd
+{% endif %}
+
+[Install]
+WantedBy=local.target

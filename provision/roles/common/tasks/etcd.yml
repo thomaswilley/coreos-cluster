@@ -1,0 +1,23 @@
+---
+  - name: confirm vars
+    debug: msg="node={{node}}"
+
+  - name: generate patched etcd-cluster.service
+    local_action: template src=etcd_cluster.service.j2 dest=/tmp/{{ inventory_hostname }}.etcd_cluster.service
+
+  - name: (scp) copy generated etcd-cluster.service to node (/home/core)
+    local_action: shell scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.vagrant.d/insecure_private_key /tmp/{{ inventory_hostname }}.etcd_cluster.service core@{{ hostvars[inventory_hostname].ansible_ssh_host }}:/home/core
+
+  - name: (raw) move etcd-cluster.service into position and properly name it
+    raw: mv /home/core/{{ inventory_hostname }}.etcd_cluster.service /media/state/units/etcd-cluster.service
+    sudo: yes
+
+  ## just realized handlers don't work b/c notifications dont work b/c pythons not on the coreos nodes. at least i think. blah.
+
+  - name: reload services
+    raw: systemctl daemon-reload
+    sudo: yes
+
+  - name: start etcd-cluster.service
+    raw: systemctl start etcd-cluster.service
+    sudo: yes
