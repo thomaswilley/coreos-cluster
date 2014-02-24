@@ -1,0 +1,10 @@
+---
+  - name: generate docker private registry service
+    local_action: template src=registry-custom.service.j2 dest=/tmp/{{ inventory_hostname }}.registry-custom.service
+
+  - name: (scp) copy generated registry-custom.service to node (/home/core)
+    local_action: shell scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.vagrant.d/insecure_private_key /tmp/{{ inventory_hostname }}.registry-custom.service core@{{ hostvars[inventory_hostname].ansible_ssh_host }}:/home/core
+
+  - name: (raw) rename back to simply registry-custom.service
+    raw: mv /home/core/{{ inventory_hostname }}.registry-custom.service /home/core/registry-custom.service
+    sudo: no

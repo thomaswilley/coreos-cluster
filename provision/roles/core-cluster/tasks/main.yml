@@ -1,1 +1,2 @@
 - include: fleet.yml
+- include: docker_private_registry.yml
