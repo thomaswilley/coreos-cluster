@@ -34,6 +34,7 @@ address, and Metadata (which is from fleet.conf & contains hostname for now
 [core-01]$ fleetctl submit registry-cluster.service
 [core-01]$ fleetctl start registry-cluster.service
 [core-01]$ fleetctl status registry-cluster.service
+```
 
 note: you'll probably get some panic messages from go when you ask for
 status or try anything ssh related. the provisioner took the liberty of
