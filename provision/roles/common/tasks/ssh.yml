@@ -1,0 +1,12 @@
+---
+  - name: (scp) copy local vagrant insecure key to node
+    local_action: shell scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.vagrant.d/insecure_private_key ~/.vagrant.d/insecure_private_key core@{{ hostvars[inventory_hostname].ansible_ssh_host }}:/home/core/.ssh
+
+  # these don't work just yet...
+  #- name: start ssh-agent 
+  #  raw: eval `ssh-agent -s`
+  #  sudo: no
+
+  #- name: ssh-add the key
+  #  raw: ssh-add /home/core/.ssh/insecure_private_key
+  #  sudo: no
